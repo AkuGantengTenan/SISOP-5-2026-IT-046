@@ -1,0 +1,5 @@
+root:x:0:
+henn:x:1000:
+hann:x:1001:henn
+viii:x:1002:henn,hann
+kids:x:1003:henn,hann,viii

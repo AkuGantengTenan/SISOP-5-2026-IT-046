@@ -1,0 +1,2 @@
+cat /etc/issue
+echo "Welcome, $USER"

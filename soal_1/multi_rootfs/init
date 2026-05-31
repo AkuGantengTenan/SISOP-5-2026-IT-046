@@ -1,0 +1,27 @@
+#!/bin/sh
+# 1. Minta BusyBox install semua symlink perintah dari DALAM Qemu!
+/bin/busybox --install -s /bin
+
+# 2. Mount virtual filesystem
+mount -t proc none /proc
+mount -t sysfs none /sys
+mount -t devtmpfs none /dev
+
+# 3. FUSE & Network
+mknod /dev/fuse c 10 229
+ip link set up dev lo
+ip link set up dev eth0      # <-- INI TAMBAHANNYA: Menyalakan kartu jaringan
+udhcpc -i eth0 &             # <-- INI TAMBAHANNYA: Tanda & agar dia jalan di background
+
+# 4. Install Package Manager (Soal no 9)
+if [ ! -f /bin/party ]; then
+    wget -qO /tmp/apk-tools.tar.gz https://dl-cdn.alpinelinux.org/alpine/v3.18/main/x86_64/apk-tools-static-2.14.0-r2.apk
+    tar -xzf /tmp/apk-tools.tar.gz -C /tmp sbin/apk.static
+    mv /tmp/sbin/apk.static /bin/party
+    chmod +x /bin/party
+fi
+
+# 5. Jalankan layar login
+while true; do
+    setsid cttyhack /bin/login
+done
